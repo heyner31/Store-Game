@@ -1,0 +1,2 @@
+name,description,description_purchase,description_sale,type,barcode,default_code,categ_id,list_price,volume,weight,company_id,sale_ok,purchase_ok,active
+Grand Theft Auto V,Videojuego para Xbox.,Membresia Gold no incluida.,No transferible.,product,74590239885,Xbox-GTAV,1,999,1,1,4,false,false,true
