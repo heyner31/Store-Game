@@ -1,6 +1,6 @@
 from itertools import product
 from django.shortcuts import render
-from django.http import HttpResponse, response
+from django.http import HttpResponse, response, JsonResponse
 # import requests
 import xmlrpc.client
 import json
@@ -29,7 +29,7 @@ def viewproducts(request):
     'product.template','search_read',
     [
         [
-            [ "company_id" ,"=", 1]
+            [ "company_id" ,"=", 4]
             # [ "id" ,"=", 2]
         ]
     ],
@@ -42,6 +42,73 @@ def viewproducts(request):
         
     # return HttpResponse(xx)
     return render(request ,"products/list.html",data)
+
+def viewGames(request):
+    #return HttpResponse(socket.gethostbyname(socket.gethostname()))
+    
+    odoo = connectionOdoo()
+    products =  odoo.models.execute_kw(
+    odoo.db
+    ,odoo.uid,
+    odoo.password,
+    'product.template','search_read',
+    [
+        [
+            [ "company_id" ,"=", 4]
+            # [ "id" ,"=", 2]
+        ]
+    ],
+    {'fields': []}
+)
+    
+    cuantos = len(products)
+
+    data = {
+        "products": products,
+        "cuantos": cuantos
+    }
+        
+    # return HttpResponse(xx)
+    return render(request ,"table.html", data)
+
+def main(request):
+    return render(request, 'base.html')
+
+def add(request):
+    return render(request, 'add.html')
+
+def addGame(request):
+
+    try:
+        json_object = request.POST
+        #json_object = json.loads(request.body)
+    except:
+        responseData = {}
+        responseData['success'] = 'false'
+        responseData['message'] = 'Error: Json not obtained'
+        return JsonResponse(responseData, status=422)
+
+    try:
+        odoo = connectionOdoo()
+        id = odoo.models.execute_kw(odoo.db, odoo.uid, odoo.password, 'product.template', 'create', [{
+        'name': json_object['name'],
+        'description': json_object['description'],
+        'description_purchase': json_object['description_purchase'],
+        'description_sale': json_object['description_sale'],
+        'type': "product",
+        'barcode': json_object['barcode'],
+        'default_code': json_object['default_code'],
+        'categ_id': "1",
+        'list_price': json_object['list_price'],
+        "company_id": 4
+        }])
+    except:
+        responseData = {}
+        responseData['success'] = 'false'
+        responseData['message'] = 'Error: Game not inserted'
+        return JsonResponse(responseData, status=422)
+
+    return render(request, 'add.html')
  
 def createProduct(request):
     url = os.getenv("URL_ODOO")

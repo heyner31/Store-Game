@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <!--h1 class="h3 mb-2 text-gray-800">{{obj.brand}} {{obj.model}}</h1>
+    <p class="mb-4">{{ obj.version }} {{ obj.year }}
+    </p-->
+
+    <!-- DataTales Example -->
+    <div class="card bg-gradient-light" id="prueba1">
+        <!--div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Número de resultados: {{ cuantos }} autos.</h6>
+        </div-->
+        <div class="row justify-content-center">
+
+        <div class="col-xl-6 col-lg-7 col-md-8 col-sm-10 col-11">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body">
+        <h1 class="h1 mb-2 text-gray-900 text-center">Agregar Videojuego</h1>
+
+            <form method="POST" action="/add" enctype='application/json' class="">
+                <div class="form-group">
+                    <label for="formName" class="lead">Nombre</label>
+                    <input type="text" class="form-control" id="formName" name="name" placeholder="Ejemplo: Grand Theft Auto: San Andreas" required>
+                </div>
+                <div class="form-group">
+                    <label for="formDescription" class="lead">Descripción</label>
+                    <input type="text" class="form-control" id="formDescription" name="description" placeholder="Ejemplo: Videojuego para Xbox" required>
+                </div>
+                <div class="form-group">
+                    <label for="formDescriptionPurchase" class="lead">Descripción de Compra</label>
+                    <input type="text" class="form-control" id="formDescriptionPurchase" name="description_purchase" placeholder="Ejemplo: Membresia Gold no incluida." required>
+                </div>
+                <div class="form-group">
+                    <label for="formDescriptionSale" class="lead">Descripción de Venta</label>
+                    <input type="text" class="form-control" id="formDescriptionSale" name="description_sale" placeholder="Ejemplo: No transferible" required>
+                </div>
+                <div class="form-group">
+                    <label for="formBarcode" class="lead">Código de Barras</label>
+                    <input type="text" class="form-control" id="formBarcode" name="barcode" placeholder="Ejemplo: 74590239285" required>
+                </div>
+                <div class="form-group">
+                    <label for="formDefaultCode" class="lead">Código por defecto</label>
+                    <input type="text" class="form-control" id="formDefaultCode" name="default_code" placeholder="Ejemplo: Xbox-GTASA" required>
+                </div>
+                <div class="form-group">
+                    <label for="formListPrice" class="lead">Precio de Lista</label>
+                    <input type="text" class="form-control" id="formListPrice" name="list_price" placeholder="Ejemplo: $499" required>
+                </div>
+                
+                <!--div class="form-group">
+                    <label for="formCilindros" class="lead">Cilindros</label>
+                    <input type="number" class="form-control" id="formCilindros" name="cylinders" placeholder="Ejemplo: 4" min="0" required>
+                </div-->
+                
+                
+                <div class="d-grid gap-2 mx-auto text-center">
+                <button type="submit" class="btn btn-success btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <span class="text">Agregar</span>
+
+                </button>
+                </div>
+            </form>
+        </div>
+        </div>
+        </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+{% endblock content %}

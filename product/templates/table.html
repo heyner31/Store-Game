@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h1 mb-2 text-gray-800">Videojuegos</h1>
+    <p class="mb-4">La siguiente tabla muestra todos los videojuegos que se encuentran en el sistema.
+        Da click en alguno de ellos para conocer más de él, modificarlo o eliminarlo.
+    </p>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Número de resultados: {{ cuantos }} videojuegos.</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Descripción de Compra</th>
+                            <th>Descripción de Venta</th>
+                            <th>Precio</th>
+                            <th>Código de Barras</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Descripción de Compra</th>
+                            <th>Descripción de Venta</th>
+                            <th>Precio</th>
+                            <th>Código de Barras</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </tfoot>
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+                          $('[data-toggle="tooltip"]').tooltip();
+                        });
+                    </script>
+                    <tbody>
+                        {% for obj in products %}
+                        <tr>
+                            <td>{{ obj.name }}</td>
+                            <td>{{ obj.default_code }}</td>
+                            <td>{{ obj.description }}</td>
+                            <td>{{ obj.description_purchase }}</td>
+                            <td>{{ obj.description_sale }}</td>
+                            <td>{{ obj.list_price }}</td>
+                            <td>{{ obj.barcode }}</td>
+                            <td><!--a class="btn btn-success btn-sm" href="/car-model/{{ obj.id }}">Ver más</a>&nbsp &nbsp<!--a class="btn btn-primary btn-sm" href="#">Editar</a--><!--a class="btn btn-danger btn-sm" href="/delete-car/{{ obj.id }}">Eliminar</a-->
+                                <a href="/game/{{ obj.id }}" class="btn btn-success btn-circle btn-sm" data-toggle="tooltip" data-placement="top" title="Ver más">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <!--a href="/rate-car-model/{{ obj.id }}" class="btn btn-info btn-circle btn-sm" data-toggle="tooltip" data-placement="top" title="Calificar">
+                                    <i class="fas fa-star"></i>
+                                </a-->
+                                <a href="/edit-game/{{ obj.id }}" class="btn btn-primary btn-circle btn-sm" data-toggle="tooltip" data-placement="top" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="/delete-game/{{ obj.id }}" class="btn btn-danger btn-circle btn-sm" data-toggle="tooltip" data-placement="top" title="Borrar">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-grid gap-2 mx-auto text-center">
+                <a href="/add-game" class="btn btn-primary btn-icon-split btn-lg">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-gamepad"></i>
+                    </span>
+                    <span class="text">Agregar nuevo juego</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Eliminar modelo de auto</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">¿Seguro que quieres eliminar este dato?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-danger" href="/delete-car/{{ obj.id }}">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+{% endblock content %}

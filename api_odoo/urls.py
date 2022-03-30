@@ -11,4 +11,11 @@ urlpatterns = [
     path('uptate', updateProduct, name="update"),
     path('create/cvs', AddProductsCSV, name="addcvs"),
     path('importcsv', importProductsCSV, name="importcsv"),
+
+    path('main', main, name="main"),
+    path('games', viewGames, name="view games"),
+    path('add-game', add, name="add game"),
+    path('add', addGame,name='addGame'),
+
+    
 ]
