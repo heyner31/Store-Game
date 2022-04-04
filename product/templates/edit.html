@@ -3,9 +3,9 @@
 {% block content %}
 <!-- Begin Page Content -->
 
-<input type="hidden" name="" value="{% url 'addGame' %}" id="urladd">
 <div class="container-fluid">
-
+    {% for obj in products %}
+    <input type="hidden" name="" value="{{obj.id}}" id="formId">
     <!-- DataTales Example -->
     <div class="card bg-gradient-light" id="prueba1">
         <!--div class="card-header py-3">
@@ -17,41 +17,43 @@
 
         <div class="card o-hidden border-0 shadow-lg my-5">
         <div class="card-body">
-        <h1 class="h1 mb-2 text-gray-900 text-center">Agregar Videojuego</h1>
+        <h1 class="h1 mb-2 text-gray-900 text-center">Actualizar Videojuego</h1>
+        <h1 class="h4 mb-2 text-gray-800 text-center">{{obj.display_name}}</h1>
+
 
             <!--form method="POST" action="/add" enctype='application/json' class=""-->
             <form method="POST" id="form_ajax">
                 <div class="form-group">
                     <label for="formName" class="lead">Nombre</label>
-                    <input type="text" class="form-control" id="formName" name="name" placeholder="Ejemplo: Grand Theft Auto: San Andreas" required>
+                    <input value="{{obj.name}}" type="text" class="form-control" id="formName" name="name" placeholder="Ejemplo: Grand Theft Auto: San Andreas" required>
                 </div>
                 <div class="form-group">
                     <label for="formDescription" class="lead">Descripción</label>
-                    <input type="text" class="form-control" id="formDescription" name="description" placeholder="Ejemplo: Videojuego para Xbox" required>
+                    <input value="{{obj.description}}" type="text" class="form-control" id="formDescription" name="description" placeholder="Ejemplo: Videojuego para Xbox" required>
                 </div>
                 <div class="form-group">
                     <label for="formDescriptionPurchase" class="lead">Descripción de Compra</label>
-                    <input type="text" class="form-control" id="formDescriptionPurchase" name="description_purchase" placeholder="Ejemplo: Membresia Gold no incluida." required>
+                    <input value="{{obj.description_purchase}}" type="text" class="form-control" id="formDescriptionPurchase" name="description_purchase" placeholder="Ejemplo: Membresia Gold no incluida." required>
                 </div>
                 <div class="form-group">
                     <label for="formDescriptionSale" class="lead">Descripción de Venta</label>
-                    <input type="text" class="form-control" id="formDescriptionSale" name="description_sale" placeholder="Ejemplo: No transferible" required>
+                    <input value="{{obj.description_sale}}" type="text" class="form-control" id="formDescriptionSale" name="description_sale" placeholder="Ejemplo: No transferible" required>
                 </div>
                 <div class="form-group">
                     <label for="formBarcode" class="lead">Código de Barras</label>
-                    <input type="text" class="form-control" id="formBarcode" name="barcode" placeholder="Ejemplo: 74590239285" required>
+                    <input value="{{obj.barcode}}" type="text" class="form-control" id="formBarcode" name="barcode" placeholder="Ejemplo: 74590239285" required>
                 </div>
                 <div class="form-group">
                     <label for="formDefaultCode" class="lead">Código por defecto</label>
-                    <input type="text" class="form-control" id="formDefaultCode" name="default_code" placeholder="Ejemplo: Xbox-GTASA" required>
+                    <input value="{{obj.default_code}}" type="text" class="form-control" id="formDefaultCode" name="default_code" placeholder="Ejemplo: Xbox-GTASA" required>
                 </div>
                 <div class="form-group">
                     <label for="formListPrice" class="lead">Precio de Lista</label>
-                    <input type="text" class="form-control" id="formListPrice" name="list_price" placeholder="Ejemplo: $499" required>
+                    <input value="{{obj.list_price}}" type="text" class="form-control" id="formListPrice" name="list_price" placeholder="Ejemplo: $499" required>
                 </div>
                 <div class="form-group">
                     <label for="formStandardPrice" class="lead">Precio Estándar</label>
-                    <input type="text" class="form-control" id="formStandardPrice" name="standard_price" placeholder="Ejemplo: $419" required>
+                    <input value="{{obj.standard_price}}" type="text" class="form-control" id="formStandardPrice" name="standard_price" placeholder="Ejemplo: $419" required>
                 </div>
                 <!--div class="form-group">
                     <label for="formActive">Activo</label>
@@ -69,7 +71,7 @@
                 
                 <div class="d-grid gap-2 mx-auto text-center">
                 <!--button type="submit" class="btn btn-success btn-icon-split" onclick="enviar()" id="agregar"-->
-                <input type="submit" class="btn btn-success" name="submit" value="Agregar">
+                <input type="submit" class="btn btn-primary" name="submit" value="Actualizar">
                     <!--span class="icon text-white-50">
                         <i class="fas fa-check"></i>
                     </span>
@@ -78,19 +80,19 @@
                 </input>
                 </div>
             </form>
-            
+            {% endfor %}
         </div>
         <div class="alert alert-primary mx-3" id="loading-alert">
             <button type="button" class="close" data-dismiss="alert">x</button>
-            <strong>Cargando... </strong> El videojuego está siendo agregado a la base de datos.
+            <strong>Cargando... </strong> Los cambios están siendo guardados en la base de datos.
         </div>
         <div class="alert alert-success mx-3" id="success-alert">
             <button type="button" class="close" data-dismiss="alert">x</button>
-            <strong>Éxito! </strong> El videojuego ha sido agregado exitosamente.
+            <strong>Éxito! </strong> El videojuego ha sido actualizado exitosamente.
         </div>
         <div class="alert alert-danger mx-3" id="error-alert">
             <button type="button" class="close" data-dismiss="alert">x</button>
-            <strong>ERROR: </strong> El videojuego no pudo ser agregado. Compruebe los datos y asegurese de que el código de barras es único.
+            <strong>ERROR: </strong> El videojuego no pudo ser actualizado. Compruebe los datos y asegurese de que son correctos.
         </div>
         </div>
         </div>
@@ -116,8 +118,9 @@
     
         $.ajax({
             type : "POST", 
-            url: "{% url 'addGameAjax' %}",
+            url: "{% url 'editGameAjax' %}",
             data: {
+             id : $('#formId').val(),
              name : $('#formName').val(),
              description : $('#formDescription').val(),
              description_purchase : $('#formDescriptionPurchase').val(),

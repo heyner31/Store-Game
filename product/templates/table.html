@@ -49,7 +49,7 @@
                     </script>
                     <tbody>
                         {% for obj in products %}
-                        <tr>
+                        <tr id="row{{ obj.id }}">
                             <td>{{ obj.name }}</td>
                             <td>{{ obj.default_code }}</td>
                             <td>{{ obj.description }}</td>
@@ -67,7 +67,7 @@
                                 <a href="/edit-game/{{ obj.id }}" class="btn btn-primary btn-circle btn-sm" data-toggle="tooltip" data-placement="top" title="Editar">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="/delete-game/{{ obj.id }}" class="btn btn-danger btn-circle btn-sm" data-toggle="tooltip" data-placement="top" title="Borrar">
+                                <a onClick="delete_game( {{ obj.id }} )" class="btn btn-danger btn-circle btn-sm" data-toggle="tooltip" data-placement="top" title="Borrar">
                                     <i class="fas fa-trash-alt"></i>
                                 </a>
                             </td>
@@ -86,6 +86,17 @@
                 </a>
             </div>
         </div>
+        <div class="alert alert-primary mx-5 mt-2 fixed-top" id="loading-alert">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            <strong>Cargando... </strong> El videojuego está siendo eliminado de la base de datos.
+        </div>
+        <div class="alert alert-success mx-5 mt-2 fixed-top" id="success-alert">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            <strong>Éxito! </strong> El videojuego ha sido eliminado exitosamente de la base de datos.
+        </div>
+        <div class="alert alert-danger mx-5 mt-2 fixed-top" id="error-alert">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            <strong>ERROR: </strong> El videojuego no pudo ser eliminado. Compruebe que este no pertenezca a una compra.
     </div>
 
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -108,6 +119,56 @@
     </div>
 
 </div>
+
 <!-- /.container-fluid -->
 
 {% endblock content %}
+
+{% block  javascript %}
+
+<script >
+
+    function delete_game(id_obt) {
+
+        if (confirm("¿Estás seguro de que deseas eliminar este videojuego? No podrás recuperarlo")) {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'deleteGame' %}",
+                data: {
+                    id : id_obt
+                },
+                beforeSend: function () {
+                    $("#loading-alert").fadeTo(2000, 500).slideUp(500, function(){
+                        $("#loading-alert").slideUp(500);
+                    });
+                },
+                success: function (data) {
+                    //console.log(data)
+                    if (data.deleted) {
+                        $("#row" + id_obt).remove();
+                        $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+                            $("#success-alert").slideUp(500);
+                        });
+                    }
+                    //alert("#row " + id_obt)
+                },
+                error: function (err) {
+                    console.log(err);
+                    $("#error-alert").fadeTo(2000, 500).slideUp(500, function(){
+                        $("#error-alert").slideUp(500);
+                    });
+                },
+            });
+        }
+
+    }
+
+    $(document).ready(function() {
+        $("#success-alert").hide();
+        $("#loading-alert").hide();
+        $("#error-alert").hide();
+    });
+
+</script>
+
+{% endblock javascript %}

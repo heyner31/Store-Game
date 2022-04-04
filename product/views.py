@@ -1,3 +1,4 @@
+from ast import If
 from itertools import product
 from django.shortcuts import render
 from django.http import HttpResponse, response, JsonResponse
@@ -18,6 +19,158 @@ load_dotenv()
 # from dotenv import load_dotenv
  
 # Create your views here.
+def ajax_posting(request):
+    if request.is_ajax():
+        first_name = request.POST.get('first_name', None) # getting data from first_name input 
+        last_name = request.POST.get('last_name', None)  # getting data from last_name input
+        if first_name and last_name: #cheking if first_name and last_name have value
+            response = {
+                         'msg':'Your form has been submitted successfully ' + first_name # response message
+            }
+            return JsonResponse(response) # return response as JSON
+
+def prueba_ajax(request):
+    return render(request, 'prueba-ajax.html')
+
+def addGameAjax(request):
+
+    #try:
+        #request.is_ajax()
+    #    if request.is_ajax():
+    #        return JsonResponse("EXITO")
+    #except:
+    #    responseData = {}
+    #    responseData['success'] = 'false'
+    #    responseData['message'] = 'Error: Request is not Ajax'
+    #    return JsonResponse(responseData, status=422)
+
+    try:
+        json_object = request.POST
+        #json_object = json.loads(request.body)
+    except:
+        responseData = {}
+        responseData['success'] = 'false'
+        responseData['message'] = 'Error: Json not obtained'
+        return JsonResponse(responseData, status=422)
+
+    try:
+        odoo = connectionOdoo()
+        id = odoo.models.execute_kw(odoo.db, odoo.uid, odoo.password, 'product.template', 'create', [{
+        'name': json_object['name'],
+        'description': json_object['description'],
+        'description_purchase': json_object['description_purchase'],
+        'description_sale': json_object['description_sale'],
+        'type': "product",
+        'barcode': json_object['barcode'],
+        'default_code': json_object['default_code'],
+        'categ_id': "1",
+        'list_price': json_object['list_price'],
+        'standard_price': json_object['standard_price'],
+        #'active' : json_object['active'],
+        "company_id": 4
+        }])
+    except:
+        responseData = {}
+        responseData['success'] = 'false'
+        responseData['message'] = 'Error: Game not inserted'
+        return JsonResponse(responseData, status=422)
+
+    response = {
+        'msg':'El videojuego ha sido agregado correctamente a la base de datos' # response message
+    }
+    return JsonResponse(response) # return response as JSON
+
+def editGameAjax(request):
+
+    try:
+        json_object = request.POST
+        #json_object = json.loads(request.body)
+    except:
+        responseData = {}
+        responseData['success'] = 'false'
+        responseData['message'] = 'Error: Json not obtained'
+        return JsonResponse(responseData, status=422)
+
+    try:
+        odoo = connectionOdoo()
+        odoo.models.execute_kw(odoo.db, odoo.uid, odoo.password, 'product.template', 'write', [[int(json_object['id'])], {
+        'name': json_object['name'],
+        'description': json_object['description'],
+        'description_purchase': json_object['description_purchase'],
+        'description_sale': json_object['description_sale'],
+        'barcode': json_object['barcode'],
+        'default_code': json_object['default_code'],
+        'list_price': json_object['list_price'],
+        'standard_price': json_object['standard_price'],
+        #'active' : json_object['active'],
+        }])
+    except:
+        responseData = {}
+        responseData['success'] = 'false'
+        responseData['message'] = 'Error: Game not updated'
+        responseData['num'] = int(json_object['id'])
+        return JsonResponse(responseData, status=422)
+
+    response = {
+        'msg':'El videojuego ha sido actualizado correctamente en la base de datos' # response message
+    }
+    return JsonResponse(response) # return response as JSON
+
+def edit(request, gameid):
+    odoo = connectionOdoo()
+    products =  odoo.models.execute_kw(
+    odoo.db,
+    odoo.uid,
+    odoo.password,
+    'product.template','search_read',
+    [
+        [
+            [ "id" ,"=", gameid]
+        ]
+    ],
+    {'fields': []}
+)
+
+    data = {
+        "products": products
+    }
+        
+    return render(request ,"edit.html", data)
+
+def deleteGame(request):
+
+    try:
+        json_object = request.POST
+        #json_object = json.loads(request.body)
+    except:
+        responseData = {}
+        responseData['success'] = 'false'
+        responseData['message'] = 'Error: Json not obtained'
+        return JsonResponse(responseData, status=422)
+
+    try:
+        odoo = connectionOdoo()
+
+        odoo.models.execute_kw(
+            odoo.db,
+            odoo.uid,
+            odoo.password,
+            'product.template', 
+            'unlink', 
+            [[int(json_object['id'])]])
+
+    except:
+        responseData = {}
+        responseData['success'] = 'false'
+        responseData['message'] = 'Error: Game not deleted'
+        return JsonResponse(responseData, status=422)
+
+    data = {
+            'deleted': True
+        }
+
+    return JsonResponse(data)
+
 def viewproducts(request):
     #return HttpResponse(socket.gethostbyname(socket.gethostname()))
     
@@ -109,6 +262,29 @@ def addGame(request):
         return JsonResponse(responseData, status=422)
 
     return render(request, 'add.html')
+
+def detailGame(request, gameid):
+    odoo = connectionOdoo()
+    products =  odoo.models.execute_kw(
+    odoo.db
+    ,odoo.uid,
+    odoo.password,
+    'product.template','search_read',
+    [
+        [
+            #[ "company_id" ,"=", 4]
+            [ "id" ,"=", gameid]
+        ]
+    ],
+    {'fields': []}
+)
+
+    data = {
+        "products": products
+    }
+        
+    return render(request ,"detail-table.html", data)
+    #return HttpResponse(gameid)
  
 def createProduct(request):
     url = os.getenv("URL_ODOO")

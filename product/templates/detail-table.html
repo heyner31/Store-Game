@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    {% for obj in products %}
+    <!-- Page Heading -->
+    <h1 class="h2 mb-2 text-gray-800">{{obj.display_name}}
+        {% for o in ratings.data %}
+            <span class="badge badge-info">My Rating: {{o.rating}}/10</span>
+        {% endfor %}
+    </h1>
+    <p class="mb-4">{{ obj.version }} {{ obj.year }}
+    </p>
+    
+
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        
+                        <tr>
+                            <th>Nombre</th>
+                            <td>{{ obj.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Código por defecto </th>
+                            <td>{{ obj.default_code }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripción</th>
+                            <td>{{ obj.description }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripción de Compra</th>
+                            <td>{{ obj.description_purchase }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripción de Venta</th>
+                            <td>{{ obj.description_sale }}</td>
+                        </tr>
+                        <tr>
+                            <th>Precio de Lista</th>
+                            <td>{{ obj.list_price }}</td>
+                        </tr>
+                        <tr>
+                            <th>Precio Estándar</th>
+                            <td>{{ obj.standard_price }}</td>
+                        </tr>
+                        <tr>
+                            <th>Código de barras</th>
+                            <td>{{ obj.barcode }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tipo</th>
+                            <td>{{ obj.type }}</td>
+                        </tr>
+                        <tr>
+                            <th>Volumen</th>
+                            <td>{{ obj.volume}} {{obj.volume_uom_name}}</td>
+                        </tr>
+                        <tr>
+                            <th>Peso</th>
+                            <td>{{ obj.weight }} {{obj.weight_uom_name}}</td>
+                        </tr>
+                        <tr>
+                            <th>Listo para Venta</th>
+                            <td>{{ obj.sale_ok }}</td>
+                        </tr>
+                        <tr>
+                            <th>Listo para Compra</th>
+                            <td>{{ obj.purchase_ok }}</td>
+                        </tr>
+                        <tr>
+                            <th>Activo</th>
+                            <td>{{ obj.active }}</td>
+                        </tr>
+                        <tr>
+                            <th>Categoría</th>
+                            <td>{{ obj.categ_id.1 }} (ID: {{ obj.categ_id.0 }})</td>
+                        </tr>
+                        <tr>
+                            <th>Compañía</th>
+                            <td>{{ obj.company_id.1 }} (ID: {{ obj.company_id.0 }})</td>
+                        </tr>  
+                        <tr>
+                            <th>Fecha de Creación</th>
+                            <td>{{ obj.create_date }}</td>
+                        </tr>  
+                        <tr>
+                            <th>Última Actualización</th>
+                            <td>{{ obj.write_date }}</td>
+                        </tr> 
+                        <!--tr>
+                            <th>PRUEBA</th>
+                            <td>{{ obj }}</td>
+                        </tr-->      
+                        
+                    </tbody>
+                </table>
+                <div class="d-grid gap-2 mx-auto text-center">
+                <a href="/edit-game/{{ obj.id }}" class="btn btn-primary btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-edit"></i>
+                    </span>
+                    <span class="text">Editar</span>
+                </a>
+                <!--a href="/delete-car/{{ obj.id }}" class="btn btn-danger btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-trash-alt"></i>
+                    </span>
+                    <span class="text">Eliminar</span>
+                </a-->
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+{% endblock content %}
