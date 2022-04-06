@@ -1,7 +1,9 @@
 from ast import If
 from itertools import product
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, HttpResponse
 from django.http import HttpResponse, response, JsonResponse
+from django.contrib.auth import logout
 # import requests
 import xmlrpc.client
 import json
@@ -80,6 +82,7 @@ def addGameAjax(request):
     }
     return JsonResponse(response) # return response as JSON
 
+@login_required
 def editGameAjax(request):
 
     try:
@@ -116,6 +119,7 @@ def editGameAjax(request):
     }
     return JsonResponse(response) # return response as JSON
 
+@login_required
 def edit(request, gameid):
     odoo = connectionOdoo()
     products =  odoo.models.execute_kw(
@@ -137,6 +141,7 @@ def edit(request, gameid):
         
     return render(request ,"edit.html", data)
 
+@login_required
 def deleteGame(request):
 
     try:
@@ -171,6 +176,7 @@ def deleteGame(request):
 
     return JsonResponse(data)
 
+@login_required
 def viewproducts(request):
     #return HttpResponse(socket.gethostbyname(socket.gethostname()))
     
@@ -196,6 +202,7 @@ def viewproducts(request):
     # return HttpResponse(xx)
     return render(request ,"products/list.html",data)
 
+@login_required
 def viewGames(request):
     #return HttpResponse(socket.gethostbyname(socket.gethostname()))
     
@@ -224,12 +231,15 @@ def viewGames(request):
     # return HttpResponse(xx)
     return render(request ,"table.html", data)
 
+@login_required
 def main(request):
     return render(request, 'base.html')
 
+@login_required
 def add(request):
     return render(request, 'add.html')
 
+@login_required
 def addGame(request):
 
     try:
@@ -263,6 +273,7 @@ def addGame(request):
 
     return render(request, 'add.html')
 
+@login_required
 def detailGame(request, gameid):
     odoo = connectionOdoo()
     products =  odoo.models.execute_kw(
@@ -285,7 +296,8 @@ def detailGame(request, gameid):
         
     return render(request ,"detail-table.html", data)
     #return HttpResponse(gameid)
- 
+
+@login_required 
 def createProduct(request):
     url = os.getenv("URL_ODOO")
     db =  os.getenv("DB_ODOO")
@@ -303,7 +315,8 @@ def createProduct(request):
     "company_id":1
     }])
     return HttpResponse(id)
- 
+
+@login_required
 def deleteProduct(request, id):
     url = os.getenv("URL_ODOO")
     db =  os.getenv("DB_ODOO")
@@ -314,7 +327,8 @@ def deleteProduct(request, id):
     uid = common.authenticate(db, os.getenv("USERNAME_ODOO"), password, output)
     models.execute_kw(db, uid, password, 'product.template', 'unlink', [[id]])
     return HttpResponse("deleted")
- 
+
+@login_required 
 def updateProduct(request):
     odoo = connectionOdoo()
     odoo.models.execute_kw(odoo.db, odoo.uid, odoo.password, 'product.template', 'write', [[43], {
@@ -322,7 +336,8 @@ def updateProduct(request):
     "price":"4567"
         }])
     return HttpResponse("updated")
-    
+
+@login_required    
 def AddProductsCSV(request):
     df = pd.read_csv('product/productos.csv')
     if(df != null):
@@ -333,6 +348,7 @@ def AddProductsCSV(request):
     else:
         return HttpResponse("No hay archivo")
 
+@login_required
 def importProductsCSV(request):
     odoo = connectionOdoo()
     df = pd.read_csv("product/products.csv", sep=',', delimiter=None, header="infer", names=None, index_col=False)
@@ -378,4 +394,7 @@ def importProductsCSV(request):
 # check if the deleted record is still in the database
     # models.execute_kw(db, uid, password,
     #     'res.partner', 'search', [[['id', '=', id]]])
-   
+
+def LogoutView(request):
+    logout(request)
+    return redirect('/login')
