@@ -1,3 +1,3 @@
 name,description,description_purchase,description_sale,type,barcode,default_code,categ_id,list_price,volume,weight,company_id,sale_ok,purchase_ok,active
-Grand Theft Auto: San Andreas,Videojuego para PS2.,Membresia no incluida.,No transferible.,product,7.45902E+11,PS2-GTASA,1,399,1,1,4,false,false,false
-The Wither 3,Videojuego para Xbox.,Membresia Gold no incluida.,No transferible.,product,74031239185,Xbox-TW3,1,449,1,1,4,false,false,true
+LEGO STAR WARS,Videojuego para PS2.,Membresia no incluida.,No transferible.,product,7.46E+11,Xbox-LEGO,1,399,1,1,4,false,false,true
+Fortnite,Videojuego para Xbox.,Membresia Gold no incluida.,No transferible.,product,74031239185,Xbox-FTNT,1,1,1,1,4,false,false,true

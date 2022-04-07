@@ -12,7 +12,9 @@ urlpatterns = [
     path('delete/<int:id>', deleteProduct, name="delete"),
     path('uptate', updateProduct, name="update"),
     path('create/cvs', AddProductsCSV, name="addcvs"),
-    path('importcsv', importProductsCSV, name="importcsv"),
+    path('importcsv', importGamesCSV, name="importcsv"),
+    #path('importcsv2', importProductsCSV, name="importcsv2"),
+
 
     path('main', main, name="main"),
     path('games', viewGames, name="view games"),
@@ -20,6 +22,8 @@ urlpatterns = [
     path('add', addGame,name='addGame'),
     path('game/<int:gameid>',detailGame,name='detailGame'),
     path('edit-game/<int:gameid>',edit,name='edit game'),
+
+    path('add-csv', addCsv,name='addCsv'),
 
 
     path('add-game-ajax', addGameAjax, name="addGameAjax"),

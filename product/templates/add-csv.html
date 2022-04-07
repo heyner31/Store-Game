@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Begin Page Content -->
+
+<!--input type="hidden" name="" value="{% url 'addGame' %}" id="urladd"-->
+<div class="container-fluid">
+
+    <!-- DataTales Example -->
+    <div class="card bg-gradient-light" id="prueba1">
+        <!--div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Número de resultados: {{ cuantos }} autos.</h6>
+        </div-->
+        <div class="row justify-content-center">
+
+        <div class="col-xl-6 col-lg-7 col-md-8 col-sm-10 col-11">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body">
+        <h1 class="h1 mb-2 text-gray-900 text-center">Importar Archivo CSV</h1>
+
+            <!--form method="POST" action="/add" enctype='application/json' class=""-->
+
+            <form action="/importcsv" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="file" name="fileupload" id="fileupload" class="form-control">
+                    <input type="submit" value="Upload File" name="submit" class="form-control">
+                </div>
+            </form>
+            
+        </div>
+        <div class="alert alert-primary mx-3" id="loading-alert">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            <strong>Cargando... </strong> El videojuego está siendo agregado a la base de datos.
+        </div>
+        <div class="alert alert-success mx-3" id="success-alert">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            <strong>Éxito! </strong> El videojuego ha sido agregado exitosamente.
+        </div>
+        <div class="alert alert-danger mx-3" id="error-alert">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            <strong>ERROR: </strong> El videojuego no pudo ser agregado. Compruebe los datos y asegurese de que el código de barras es único.
+        </div>
+        </div>
+        </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- /.container-fluid -->
+
+{% endblock content %}
+
+{% block  javascript %}
+
+<script >
+
+    $(document).ready(function() {
+        $("#success-alert").hide();
+        $("#loading-alert").hide();
+        $("#error-alert").hide();
+    });
+
+</script>
+
+{% endblock javascript %}

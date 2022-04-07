@@ -13,6 +13,8 @@ import json
 import os
 import pandas as pd
 import logging
+import codecs
+import csv
  
 from .connectionOdoo import * 
  
@@ -33,6 +35,9 @@ def ajax_posting(request):
 
 def prueba_ajax(request):
     return render(request, 'prueba-ajax.html')
+
+def addCsv(request):
+    return render(request, 'add-csv.html')
 
 def addGameAjax(request):
 
@@ -353,15 +358,20 @@ def importProductsCSV(request):
     odoo = connectionOdoo()
     df = pd.read_csv("product/products.csv", sep=',', delimiter=None, header="infer", names=None, index_col=False)
     info = []
+    #datos = []
+    #file = request.FILES['fileupload']
+    #stream = codecs.iterdecode(file.stream, 'utf-8')
+    #for row in csv.reader(file, dialect=csv.excel):
+    #            if row:
+    #                datos.append(row)
+
+    #datos.pop(0)
+
 
     for i in range(0, len(df)):
-        logging.debug("---Product {}---\n".format(i+1))
         product = {}
         for item in df:
-            logging.debug("" + item + ":") 
             data = df[item][i]
-            logging.debug(data)
-            logging.debug(type(data))
             
             if item == "list_price":
                 if data <= 0:
@@ -375,8 +385,61 @@ def importProductsCSV(request):
         info.append(product)
             
         product["barcode"] = str(product["barcode"])
-        logging.debug(product)
-        logging.debug(type(product))
+
+        #sys.exit()
+        return HttpResponse(info)
+
+        id = None
+        try:
+            id = odoo.models.execute_kw(odoo.db, odoo.uid, odoo.password, 'product.template', 'create',
+                [
+                    product
+                ])
+        except Exception as e:
+            responseData = {}
+            responseData['success'] = 'false'
+            responseData['message'] = 'Error: CSV not inserted'
+            return JsonResponse(responseData, status=422)
+
+    responseData = {}
+    responseData['success'] = 'true'
+    responseData['message'] = 'CSV inserted'
+    return JsonResponse(responseData, status=422)
+    #return HttpResponse(info)
+
+@login_required
+def importGamesCSV(request):
+    try:
+        odoo = connectionOdoo()
+        csv_file = request.FILES["fileupload"]
+        df = pd.read_csv(csv_file, sep=',', delimiter=None, header="infer", names=None, index_col=False)
+
+    except:
+        responseData = {}
+        responseData['success'] = 'false'
+        responseData['message'] = 'Error: CSV not read'
+        return JsonResponse(responseData, status=422)
+
+    info = []
+
+    for i in range(0, len(df)):
+        product = {}
+        for item in df:
+            data = df[item][i]
+            
+            if item == "list_price":
+                if data <= 0:
+                    raise Exception("El producto {} tiene que tener un valor válido".format(df["name"][i]))
+            
+            if isinstance(data, str):
+                product[item] = data
+            else:
+                product[item] = data.item()
+                
+        info.append(product)
+            
+        product["barcode"] = str(product["barcode"])
+
         #sys.exit()
         id = None
         try:
@@ -385,11 +448,16 @@ def importProductsCSV(request):
                     product
                 ])
         except Exception as e:
-            return HttpResponse("Error")
-        logging.debug(id)
+            responseData = {}
+            responseData['success'] = 'false'
+            responseData['message'] = 'Error: CSV not inserted'
+            return JsonResponse(responseData, status=422)
 
-    return HttpResponse(info)
-
+    responseData = {}
+    responseData['success'] = 'true'
+    responseData['message'] = 'CSV inserted'
+    return redirect('/games')
+    return JsonResponse(responseData, status=422)
 
 # check if the deleted record is still in the database
     # models.execute_kw(db, uid, password,
